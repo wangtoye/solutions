@@ -6,8 +6,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class SolutionsApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+//    @Autowired
+//    private UserService userServiceImpl;
 
+
+    @Test
+    void test() {
+
+    }
 }

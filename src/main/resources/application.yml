@@ -1,0 +1,85 @@
+server:
+  port: 8080
+spring:
+  #当遇到同样名字的时候，允许覆盖注册
+  main:
+    allow-bean-definition-overriding: true
+#分库分表配置
+sharding:
+  jdbc:
+    datasource:
+      #数据源名称
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        poolName: hikari-0
+        #等待来自池的连接的最大毫秒数
+        connectionTimeout: 30000
+        #池中维护的最小空闲连接数
+        minimumIdle: 1
+        #池中最大连接数，包括闲置和使用中的连接
+        maximumPoolSize: 5
+        #允许连接在池中闲置的最长时间
+        idleTimeout: 60000
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        #hikari需要使用jdbcUrl，否则使用url即可
+        jdbcUrl: jdbc:mysql://dev-db.joinboom.net:3306/wytest2?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8
+        username: root
+        password: ArImzDOO
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        poolName: hikari-1
+        #等待来自池的连接的最大毫秒数
+        connectionTimeout: 30000
+        #池中维护的最小空闲连接数
+        minimumIdle: 1
+        #池中最大连接数，包括闲置和使用中的连接
+        maximumPoolSize: 5
+        #允许连接在池中闲置的最长时间
+        idleTimeout: 60000
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        #hikari需要使用jdbcUrl，否则使用url即可
+        jdbcUrl: jdbc:mysql://dev-db.joinboom.net:3306/wytest3?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8
+        username: root
+        password: ArImzDOO
+    config:
+      sharding:
+        props:
+          sql.show: true
+        tables:
+          #逻辑表user操作
+          user:
+            #自增列名称，如果配置了值，则表中不会自动生成序列值。
+#            key-generator-column-name: id
+            #自增列值生成器类名称，缺省表示使用默认自增列值生成器。该类需提供无参数的构造器
+#            key-generator-class-name:
+            #真实表数据节点，由数据源名 + 表名组成，以小数点分隔。多个表以逗号分隔，支持inline表达式。
+            actual-data-nodes: ds$->{0..1}.user$->{0..1}
+            #分库策略
+            database-strategy:
+              inline:
+                #列名称，多个列以逗号分隔
+                sharding-column: user_id
+                #分片算法行表达式，按模运算分配
+                algorithm-expression: ds$->{user_id % 2}
+                #分表分库的自定义操作
+#                precise-algorithm-class-name:
+            #分表策略
+            table-strategy:
+              inline:
+                #列名称，多个列以逗号分隔
+                sharding-column: age
+                #分片算法行表达式，按模运算分配
+                algorithm-expression: user$->{age % 2}
+                #分表分库的自定义操作
+#                precise-algorithm-class-name:
+#mybatis+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  mapper-locations: classpath*:/mapper/**/*.xml
+
+swagger:
+  enable: true

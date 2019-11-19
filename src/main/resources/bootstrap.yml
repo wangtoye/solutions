@@ -1,0 +1,4 @@
+#应用名，启动时就要生效，生成日志文件时需要
+spring:
+  application:
+    name: solutions
