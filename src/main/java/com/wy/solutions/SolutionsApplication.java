@@ -6,6 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * @author : wangye
+ * @date : 2019-11-19
+ * Description:
+ */
 @SpringBootApplication
 @MapperScan("com.wy.solutions.mapper")
 @EnableTransactionManagement

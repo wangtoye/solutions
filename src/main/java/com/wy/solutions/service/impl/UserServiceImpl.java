@@ -1,9 +1,9 @@
-package com.wy.solutions.serviceImpl;
+package com.wy.solutions.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wy.solutions.entity.User;
 import com.wy.solutions.mapper.UserMapper;
 import com.wy.solutions.service.UserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

@@ -77,7 +77,7 @@ public class CodeGeneration {
         pc.setParent("com.wy." + appName);
         pc.setController("controller");
         pc.setService("service");
-        pc.setServiceImpl("serviceImpl");
+        pc.setServiceImpl("service.impl");
         pc.setMapper("mapper");
         pc.setEntity("entity");
         pc.setXml(null);
