@@ -34,7 +34,7 @@ public class CodeGeneration {
         //XML columList
         gc.setBaseColumnList(false);
         //作者
-        gc.setAuthor("wangye");
+        gc.setAuthor("wangtoye");
         //是否打开输出目录
         gc.setOpen(false);
         //自定义文件命名，注意%s 会自动填充表实体属性

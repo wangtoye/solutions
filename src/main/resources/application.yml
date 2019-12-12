@@ -4,6 +4,24 @@ spring:
   #当遇到同样名字的时候，允许覆盖注册
   main:
     allow-bean-definition-overriding: true
+  #redis配置
+  redis:
+    port: 6379
+    password: tv84mApa
+    host: dev-redis.joinboom.net
+    timeout: 5000
+    #使用16个database中的第二个。下标从0开始。
+    database: 1
+    lettuce:
+      pool:
+        #最大活跃连接数
+        max-active: 8
+        #最长释放时间
+        max-wait: -1
+        #最大空闲连接数
+        max-idle: 8
+        #最小空闲连接数
+        min-idle: 0
 #分库分表配置
 sharding:
   jdbc:
@@ -22,7 +40,6 @@ sharding:
         #允许连接在池中闲置的最长时间
         idleTimeout: 60000
         driver-class-name: com.mysql.cj.jdbc.Driver
-        #hikari需要使用jdbcUrl，否则使用url即可
         jdbcUrl: jdbc:mysql://dev-db.joinboom.net:3306/wytest2?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8
         username: root
         password: ArImzDOO
@@ -38,7 +55,6 @@ sharding:
         #允许连接在池中闲置的最长时间
         idleTimeout: 60000
         driver-class-name: com.mysql.cj.jdbc.Driver
-        #hikari需要使用jdbcUrl，否则使用url即可
         jdbcUrl: jdbc:mysql://dev-db.joinboom.net:3306/wytest3?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8
         username: root
         password: ArImzDOO
@@ -50,9 +66,9 @@ sharding:
           #逻辑表user操作
           user:
             #自增列名称，如果配置了值，则表中不会自动生成序列值。
-#            key-generator-column-name: id
+            #            key-generator-column-name: id
             #自增列值生成器类名称，缺省表示使用默认自增列值生成器。该类需提供无参数的构造器
-#            key-generator-class-name:
+            #            key-generator-class-name:
             #真实表数据节点，由数据源名 + 表名组成，以小数点分隔。多个表以逗号分隔，支持inline表达式。
             actual-data-nodes: ds$->{0..1}.user$->{0..1}
             #分库策略
@@ -63,7 +79,7 @@ sharding:
                 #分片算法行表达式，按模运算分配
                 algorithm-expression: ds$->{user_id % 2}
                 #分表分库的自定义操作
-#                precise-algorithm-class-name:
+            #                precise-algorithm-class-name:
             #分表策略
             table-strategy:
               inline:
@@ -81,5 +97,40 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
   mapper-locations: classpath*:/mapper/**/*.xml
 
-swagger:
-  enable: true
+
+#自定义配置
+solutions:
+  #是否开启swagger
+  swagger:
+    enable: true
+  #redis的key默认保存时间，单位秒。默认1800秒
+  redis:
+    default:
+      expriation: 60
+  cache:
+    custom-cache:
+      "[solutions:user]":
+        time-to-live: 20s
+      "[solutions:user1]":
+        time-to-live: 40s
+double-cache:
+  #一级缓存配置
+  caffeine:
+    "[solutions:user]":
+      #初始的缓存空间大小，缓存的最大条数，最后一次写入后经过固定时间过期，创建缓存或者最近一次更新缓存后经过固定的时间间隔刷新缓存,refreshAfterWrite=20s
+      spec: initialCapacity=10,maximumSize=20,expireAfterWrite=10s
+    "[solutions:user1]":
+      #初始的缓存空间大小，缓存的最大条数，最后一次写入后经过固定时间过期，创建缓存或者最近一次更新缓存后经过固定的时间间隔刷新缓存,refreshAfterWrite=40s
+      spec: initialCapacity=10,maximumSize=20,expireAfterWrite=10s
+  #二级缓存配置
+  redis:
+    "[solutions:user]":
+      time-to-live: 2M
+    "[solutions:user1]":
+      time-to-live: 5M
+  #不允许存储null值
+  allowNullValues: false
+  #开启一级缓存
+  useL1Cache: true
+  #发布订阅的主题，目的是同步删除各个节点的一级缓存
+  topic: "solutions:topic:removeL1Cache"

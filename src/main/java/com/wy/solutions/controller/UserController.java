@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * 前端控制器
  * </p>
  *
- * @author wangye
+ * @author wangtoye
  * @since 2019-11-18
  */
 @RestController
@@ -66,5 +66,18 @@ public class UserController {
         return GSON.toJson(pageData.getRecords());
     }
 
-}
 
+    @ApiOperation(value = "查询指定用户", notes = "cache缓存测试")
+    @RequestMapping(value = "queryByUserId", method = RequestMethod.GET)
+    public String queryByUserId(@RequestParam Integer userId, @RequestParam Integer type) {
+        if (type == 1) {
+            return GSON.toJson(userService.getUserListByUserIdCacheable(userId));
+        } else if (type == 2) {
+            return GSON.toJson(userService.getUserListByUserIdCachePut(userId));
+        } else if (type == 3) {
+            return GSON.toJson(userService.cleanUserListByUserIdCacheEvict(userId));
+        } else {
+            return GSON.toJson(userService.getUserListByUserIdCaching(userId));
+        }
+    }
+}

@@ -1,30 +1,42 @@
-CREATE TABLE `user` (
+# 逻辑表
+# CREATE TABLE `user` (
+#     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+#     `name` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '姓名',
+#     `age` INT(11) NOT NULL DEFAULT '0' COMMENT '年龄',
+#     `email` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '邮箱',
+#     `add_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+#     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+#     `del_flag` TINYINT(2) NOT NULL DEFAULT '0' COMMENT '删除标记位 0有效 1删除',
+#     PRIMARY KEY (`id`)
+# ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+#真实表
+CREATE TABLE `user0` (
+    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户ID',
+    `name` varchar(30) NOT NULL DEFAULT '' COMMENT '姓名',
+    `age` int(11) NOT NULL DEFAULT '0' COMMENT '年龄',
+    `email` varchar(50) NOT NULL DEFAULT '' COMMENT '邮箱',
+    `add_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `del_flag` tinyint(2) NOT NULL DEFAULT '0' COMMENT '删除标记位 0有效 1删除',
+    PRIMARY KEY (`id`),
+    KEY `key_user_id`(`user_id`)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE `user1` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `user_id` INT(11) NOT NULL DEFAULT '0' COMMENT '用户ID',
     `name` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '姓名',
     `age` INT(11) NOT NULL DEFAULT '0' COMMENT '年龄',
     `email` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '邮箱',
     `add_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     `del_flag` TINYINT(2) NOT NULL DEFAULT '0' COMMENT '删除标记位 0有效 1删除',
-    PRIMARY KEY (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
-DROP PROCEDURE IF EXISTS my_insert;
-DELIMITER $$
-CREATE PROCEDURE my_insert(
-IN begin_index INT,
-IN end_index INT
+    PRIMARY KEY (`id`),
+    KEY `key_user_id`(`user_id`)
 )
-BEGIN
-DECLARE v1 VARCHAR(30);
-DECLARE v2 VARCHAR(50);
-WHILE begin_index!=end_index DO
-SET v1 = CONCAT('聂风', begin_index);
-SET v2 = CONCAT('niefeng', begin_index, '@qq.com');
-INSERT INTO `user` (`name`, `age`, `email`)VALUES(v1, begin_index, v2);
-SET begin_index = begin_index + 1;
-END WHILE;
-END $$
-
-#调用
-#call my_insert(1,20000000);
+    ENGINE = INNODB
+    DEFAULT CHARSET = utf8mb4

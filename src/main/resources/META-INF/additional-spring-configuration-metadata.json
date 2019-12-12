@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "solutions.swagger.enable",
+      "type": "java.lang.Boolean",
+      "description": "com.wy.solutions.config.SwaggerConfiguration.enableSwagger 是否开启swagger功能."
+    },
+    {
+      "name": "solutions.redis.default.expriation",
+      "type": "java.lang.Integer",
+      "description": "com.wy.solutions.config.RedisConfiguration.expiration redis缓存默认的过期时间."
+    }
+  ]
+}
