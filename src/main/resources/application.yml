@@ -8,7 +8,7 @@ spring:
   redis:
     port: 6379
     password: tv84mApa
-    host: dev-redis.joinboom.net
+    host: dev-redis.wangtoye.com
     timeout: 5000
     #使用16个database中的第二个。下标从0开始。
     database: 1
@@ -40,7 +40,7 @@ sharding:
         #允许连接在池中闲置的最长时间
         idleTimeout: 60000
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbcUrl: jdbc:mysql://dev-db.joinboom.net:3306/wytest2?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8
+        jdbcUrl: jdbc:mysql://dev-db.wangtoye.com:3306/wytest2?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8
         username: root
         password: ArImzDOO
       ds1:
@@ -55,7 +55,7 @@ sharding:
         #允许连接在池中闲置的最长时间
         idleTimeout: 60000
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbcUrl: jdbc:mysql://dev-db.joinboom.net:3306/wytest3?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8
+        jdbcUrl: jdbc:mysql://dev-db.wangtoye.com:3306/wytest3?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8
         username: root
         password: ArImzDOO
     config:
