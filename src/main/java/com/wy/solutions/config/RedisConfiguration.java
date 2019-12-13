@@ -1,31 +1,22 @@
 package com.wy.solutions.config;
 
-import com.wy.solutions.util.CacheUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 /**
- * 启用SpringCache 使用RedisCacheManager做缓存控制器
+ * redis配置类
  *
- * @see org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration
+ * @author wangtoye
+ * @date 2019-12-12
+ * Description:
  */
-//@Configuration
+@Configuration
 public class RedisConfiguration {
 
     /**
@@ -51,21 +42,23 @@ public class RedisConfiguration {
      * *** 可读性略差, 底层为 Unsafe 反射拷贝！所以遇见 hibernate 代理对象就要炸！
      * 由google提供
      *
-     * @param connectionFactory
-     * @return
+     * @param connectionFactory 连接工厂
+     * @return redis操作实例
      */
     @Bean
-    public RedisTemplate redisTemplate(RedisConnectionFactory connectionFactory) {
-        return new RedisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        return new RedisTemplate<String, Object>() {
             {
                 setConnectionFactory(connectionFactory);
                 // 所有key使用 StringRedisSerializer
-                setKeySerializer(new StringRedisSerializer());
-                // 其他的序列化使用GenericJackson2JsonRedisSerializer
-                GenericJackson2JsonRedisSerializer serializer = CacheUtils.getGenericJackson2JsonRedisSerializer();
-                setValueSerializer(serializer);
-                setHashKeySerializer(serializer);
-                setHashValueSerializer(serializer);
+                StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+                setKeySerializer(stringRedisSerializer);
+                setHashKeySerializer(stringRedisSerializer);
+                // 所有value使用 GenericJackson2JsonRedisSerializer
+                GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer =
+                        com.wangtoye.doublecachespringbootstarter.utils.CacheUtils.getGenericJackson2JsonRedisSerializer();
+                setValueSerializer(genericJackson2JsonRedisSerializer);
+                setHashValueSerializer(genericJackson2JsonRedisSerializer);
                 afterPropertiesSet();
             }
         };
@@ -76,39 +69,40 @@ public class RedisConfiguration {
      *
      * @return RedisCacheManager 配置
      */
-    @Bean
-    public CacheManager cacheManager(
-            RedisConnectionFactory connectionFactory, MyRedisProperties myRedisProperties) {
-
-        // 配置序列化策略
-        RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration
-                .defaultCacheConfig()
-                // key 默认 StringRedisSerializer
-                // value 默认 JdkSerializationRedisSerializer，此处修改为 GenericJackson2JsonRedisSerializer
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(CacheUtils.getGenericJackson2JsonRedisSerializer()))
-                .entryTtl(Duration.ofSeconds(expiration))
-                //默认两个::多了一层空文件夹
-                .computePrefixWith(name -> name + ":")
-                .disableCachingNullValues();
-
-        RedisCacheManager.RedisCacheManagerBuilder managerBuilder = RedisCacheManager
-                .builder(RedisCacheWriter.lockingRedisCacheWriter(connectionFactory))
-                .cacheDefaults(defaultCacheConfig);
-
-        //针对不同的key配置ttl
-        Map<String, CacheProperties.Redis> customCachePropertiesMap = myRedisProperties.getCustomCache();
-        Map<String, RedisCacheConfiguration> ttlConfigMap = new HashMap<>(customCachePropertiesMap.size());
-        Optional.ofNullable(myRedisProperties).map(p -> p.getCustomCache()).ifPresent(customCache -> {
-            customCache.forEach((key, redisConfig) -> {
-                RedisCacheConfiguration customCacheConfig = CacheUtils.handleRedisCacheConfiguration(redisConfig,
-                        defaultCacheConfig);
-                ttlConfigMap.put(key, customCacheConfig);
-            });
-        });
-
-        managerBuilder.withInitialCacheConfigurations(ttlConfigMap);
-        return managerBuilder.build();
-    }
+//    @Bean
+//    public CacheManager cacheManager(
+//            RedisConnectionFactory connectionFactory, MyRedisProperties myRedisProperties) {
+//
+//        // 配置序列化策略
+//        RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration
+//                .defaultCacheConfig()
+//                // key 默认 StringRedisSerializer
+//                // value 默认 JdkSerializationRedisSerializer，此处修改为 GenericJackson2JsonRedisSerializer
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(CacheUtils
+//                .getGenericJackson2JsonRedisSerializer()))
+//                .entryTtl(Duration.ofSeconds(expiration))
+//                //默认两个::多了一层空文件夹
+//                .computePrefixWith(name -> name + ":")
+//                .disableCachingNullValues();
+//
+//        RedisCacheManager.RedisCacheManagerBuilder managerBuilder = RedisCacheManager
+//                .builder(RedisCacheWriter.lockingRedisCacheWriter(connectionFactory))
+//                .cacheDefaults(defaultCacheConfig);
+//
+//        //针对不同的key配置ttl
+//        Map<String, CacheProperties.Redis> customCachePropertiesMap = myRedisProperties.getCustomCache();
+//        Map<String, RedisCacheConfiguration> ttlConfigMap = new HashMap<>(customCachePropertiesMap.size());
+//        Optional.ofNullable(myRedisProperties).map(p -> p.getCustomCache()).ifPresent(customCache -> {
+//            customCache.forEach((key, redisConfig) -> {
+//                RedisCacheConfiguration customCacheConfig = CacheUtils.handleRedisCacheConfiguration(redisConfig,
+//                        defaultCacheConfig);
+//                ttlConfigMap.put(key, customCacheConfig);
+//            });
+//        });
+//
+//        managerBuilder.withInitialCacheConfigurations(ttlConfigMap);
+//        return managerBuilder.build();
+//    }
 
     /**
      * 缺省key的生成规则

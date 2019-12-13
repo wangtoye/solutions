@@ -117,11 +117,11 @@ double-cache:
   #一级缓存配置
   caffeine:
     "[solutions:user]":
-      #初始的缓存空间大小，缓存的最大条数，最后一次写入后经过固定时间过期，创建缓存或者最近一次更新缓存后经过固定的时间间隔刷新缓存,refreshAfterWrite=20s
-      spec: initialCapacity=10,maximumSize=20,expireAfterWrite=10s
+      #初始的缓存空间大小，缓存的最大条数，最后一次写入后经过固定时间过期expireAfterWrite=10s，创建缓存或者最近一次更新缓存后经过固定的时间间隔刷新缓存refreshAfterWrite=20s
+      spec: initialCapacity=10,maximumSize=20,refreshAfterWrite=5s
     "[solutions:user1]":
-      #初始的缓存空间大小，缓存的最大条数，最后一次写入后经过固定时间过期，创建缓存或者最近一次更新缓存后经过固定的时间间隔刷新缓存,refreshAfterWrite=40s
-      spec: initialCapacity=10,maximumSize=20,expireAfterWrite=10s
+      #初始的缓存空间大小，缓存的最大条数，最后一次写入后经过固定时间过期expireAfterWrite=10s，创建缓存或者最近一次更新缓存后经过固定的时间间隔刷新缓存refreshAfterWrite=40s
+      spec: initialCapacity=10,maximumSize=20,refreshAfterWrite=5s
   #二级缓存配置
   redis:
     "[solutions:user]":
