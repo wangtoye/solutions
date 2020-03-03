@@ -51,8 +51,8 @@ public class CodeGeneration {
         dsc.setDbType(DbType.MYSQL);
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("ArImzDOO");
-        dsc.setUrl("jdbc:mysql://dev-db.joinboom.net:3306/wytest2?useUnicode=true&characterEncoding=utf-8" +
+        dsc.setPassword("ArImzD");
+        dsc.setUrl("jdbc:mysql://db.wangtoye.com:3306/wytest2?useUnicode=true&characterEncoding=utf-8" +
                 "&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false&serverTimezone=GMT%2B8");
         mpg.setDataSource(dsc);
 
