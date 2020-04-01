@@ -9,7 +9,7 @@
 * springboot 2.2.1  
 * mybatis-plus 3.2.0  
 * sharding-jdbc 3.0.0  
-* swargger2 2.9.2  
+* swagger2 2.9.2  
 ## 问题二：redis-cache缓存
 利用redis和cache把数据库查询的结果放入到缓存中，加快查询速度。  
 详情查看[double-cache](https://github.com/wangtoye/double-cache)  
