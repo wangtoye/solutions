@@ -18,7 +18,7 @@
         <java.version>1.8</java.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <sharding.jdbc.version>3.0.0</sharding.jdbc.version>
-        <swargger2.version>2.9.2</swargger2.version>
+        <swargger2.version>2.10.0</swargger2.version>
     </properties>
 
     <dependencies>
